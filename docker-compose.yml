@@ -1,0 +1,31 @@
+version: "1.0"
+services:
+  php_fpm:
+    build: .
+    container_name: api
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+  nginx:
+    image: nginx:1.15
+    container_name: api_nginx
+    working_dir: /var/www/html
+    ports:
+      - 8181:80
+    volumes:
+      - ./:/var/www/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+  mysql:
+    image: mysql:5.7
+    container_name: api_mysql
+    environment:
+      - MYSQL_DATABASE=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=api
+      - MYSQL_PASSWORD=api
+    ports:
+      - 3307:3306
+networks:
+  default:
+    external:
+      name: api
